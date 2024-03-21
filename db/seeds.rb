@@ -7,6 +7,8 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+require 'open-uri'
+
 AdminUser.find_or_create_by(email: 'admin@example.com') do |user|
     user.password = 'password'
     user.password_confirmation = 'password'
@@ -26,13 +28,20 @@ Category.create(name: 'Jewelry')
 
 # Create Products
 
-10.times do
+100.times do
   # En doesn't work.
   Faker::Config.locale = 'en'
-  Product.create(
+  product = Product.create(
     name: Faker::Commerce.product_name,
     description: Faker::Lorem.paragraph,
     price: Faker::Commerce.price,
     category_id: Category.pluck(:id).sample
   )
+  # Use image name as search key word to get the picture.
+  image_name = product.name.downcase.gsub(' ', '_')
+  image_url = Faker::LoremFlickr.image(size: "300x300", search_terms: [image_name])
+  
+  # Download image and attach to the product.
+  response = URI.open(image_url)
+  product.image.attach(io: response, filename: "#{image_name}.jpg")
 end
