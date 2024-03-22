@@ -28,38 +28,102 @@ Page.find_or_create_by(title: 'About') do |page|
   end
 
 
-# Use csb to create Categories
-
+# Use csv to create Categories
 csv_file_path = '/Users/captainchenn/Desktop/3011 ruby/Data_project/ecommerce_project/Category.csv'
 CSV.foreach(csv_file_path, headers: true) do |row|
   Category.find_or_create_by(name: row['Name'], description: row['Description'])
 end
 
-# Create Products
+# Create 10 real products
+Category.find_by(name: 'Electronics').products.create(
+  name: 'iPhone 13',
+  description: 'The latest iPhone model with advanced features.',
+  price: 999.99,
+  category_id: Category.find_by(name: 'Electronics').id
+)
+Category.find_by(name: 'Electronics').products.create(
+  name: 'Samsung Galaxy Watch',
+  description: 'A smartwatch with fitness tracking and health monitoring features.',
+  price: 299.99,
+  category_id: Category.find_by(name: 'Electronics').id
+)
 
-100.times do
-    Faker::Config.locale = 'en'
-    product = Product.create(
-      name: Faker::Commerce.product_name,
-      description: Faker::Lorem.paragraph,
-      price: Faker::Commerce.price,
-      category_id: Category.pluck(:id).sample
-    )
-    
-    # search_terms = product.name.downcase.split(/\s+/).join(',')
-    # response = URI.open("https://api.unsplash.com/photos/random?query=#{search_terms}&client_id=El6ZyuhqcDfDXiqyvcYm-VUVWZYGGqz5UvxeOnEfEWY")
-    # data = JSON.parse(response.read)
-    # image_url = data['urls']['regular']
-    
-    # response = URI.open(image_url)
-    # product.image.attach(io: response, filename: "#{product.name.parameterize(separator: '_')}.jpg")
+Category.find_by(name: 'Clothing').products.create(
+  name: 'Adidas Ultraboost Shoes',
+  description: 'Running shoes with responsive cushioning for a smooth run.',
+  price: 149.99,
+  category_id: Category.find_by(name: 'Clothing').id
+)
+Category.find_by(name: 'Clothing').products.create(
+  name: 'Levi\'s 501 Jeans',
+  description: 'Classic jeans with a straight fit and durable denim construction.',
+  price: 59.99,
+  category_id: Category.find_by(name: 'Clothing').id
+)
 
-    # Use image name as search key word to get the picture.
-    # image_name = product.name.downcase.gsub(' ', '_')
-    # image_url = Faker::LoremFlickr.image(size: "300x300", search_terms: [image_name])
-    
-    # # Download image and attach to the product.
-    # response = URI.open(image_url)
-    # product.image.attach(io: response, filename: "#{image_name}.jpg")
+Category.find_by(name: 'Home & Kitchen').products.create(
+  name: 'Instant Pot Duo',
+  description: 'A multi-functional pressure cooker for quick and easy cooking.',
+  price: 79.99,
+  category_id: Category.find_by(name: 'Home & Kitchen').id
+)
+Category.find_by(name: 'Home & Kitchen').products.create(
+  name: 'Cuisinart Coffee Maker',
+  description: 'An automatic coffee maker with programmable brewing options.',
+  price: 129.99,
+  category_id: Category.find_by(name: 'Home & Kitchen').id
+)
 
-end
+Category.find_by(name: 'Books').products.create(
+  name: 'The Great Gatsby',
+  description: 'A classic novel by F. Scott Fitzgerald.',
+  price: 12.99,
+  category_id: Category.find_by(name: 'Books').id
+)
+Category.find_by(name: 'Books').products.create(
+  name: 'Harry Potter and the Philosopher\'s Stone',
+  description: 'The first book in the Harry Potter series by J.K. Rowling.',
+  price: 9.99,
+  category_id: Category.find_by(name: 'Books').id
+)
+
+Category.find_by(name: 'Furniture').products.create(
+  name: 'IKEA Hemnes Bed Frame',
+  description: 'A sturdy and stylish bed frame with storage drawers.',
+  price: 299.99,
+  category_id: Category.find_by(name: 'Furniture').id
+)
+Category.find_by(name: 'Furniture').products.create(
+  name: 'West Elm Mid-Century Dresser',
+  description: 'A mid-century modern dresser with sleek design.',
+  price: 499.99,
+  category_id: Category.find_by(name: 'Furniture').id
+)
+
+# Create 100 fake Products
+Category.all.each do |category|
+    100.times do
+      Faker::Config.locale = 'en'
+      product = Product.create(
+        name: Faker::Commerce.product_name,
+        description: Faker::Lorem.paragraph,
+        price: Faker::Commerce.price,
+        category_id: category.id
+      )
+  
+      # 1. Use API to generate image: Failed, to many requests.
+      # search_terms = product.name.downcase.split(/\s+/).join(',')
+      # response = URI.open("https://api.unsplash.com/photos/random?query=#{search_terms}&client_id=El6ZyuhqcDfDXiqyvcYm-VUVWZYGGqz5UvxeOnEfEWY")
+      # data = JSON.parse(response.read)
+      # image_url = data['urls']['regular']
+      
+      # response = URI.open(image_url)
+      # product.image.attach(io: response, filename: "#{product.name.parameterize(separator: '_')}.jpg")
+  
+      # 2. Use faker to generate: Success, but picture is the same.
+      # image_name = product.name.downcase.gsub(' ', '_')
+      # image_url = Faker::LoremFlickr.image(size: "300x300", search_terms: [image_name])
+      # response = URI.open(image_url)
+      # product.image.attach(io: response, filename: "#{image_name}.jpg")
+    end
+  end

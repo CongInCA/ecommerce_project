@@ -1,6 +1,8 @@
 class Category < ApplicationRecord
     has_many :products
-    
+
+    include Kaminari::PageScopeMethods
+
     def self.ransackable_associations(auth_object = nil)
         ["products"]
       end

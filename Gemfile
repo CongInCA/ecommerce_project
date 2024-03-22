@@ -2,6 +2,8 @@ source "https://rubygems.org"
 
 ruby "3.3.0"
 
+gem 'kaminari'
+
 gem "activeadmin", "~> 3.2"
 
 gem "devise", "~> 4.9"
