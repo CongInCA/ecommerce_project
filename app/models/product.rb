@@ -11,4 +11,12 @@ class Product < ApplicationRecord
     def self.ransackable_associations(auth_object = nil)
     ["category"]
     end
+    
+    def self.search(query)
+        if query.present?
+          where("name LIKE ? OR description LIKE ?", "%#{query}%", "%#{query}%")
+        else
+          all
+        end
+      end
 end

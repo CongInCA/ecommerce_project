@@ -1,5 +1,5 @@
 ActiveAdmin.register Product do
-    permit_params :name, :description, :price, :category_id, :image
+    permit_params :name, :description, :price, :category_id, :image, :discount_price
   
     filter :name
     filter :price
@@ -12,6 +12,7 @@ ActiveAdmin.register Product do
         column :description
         column :price
         column :category
+        column :discount_price
         column "Image" do |product|
           if product.image.attached?
             image_tag(url_for(product.image), class: 'admin-index-image')
@@ -28,6 +29,7 @@ ActiveAdmin.register Product do
           row :description
           row :price
           row :category
+          row :discount_price
           row :image do |product|
             if product.image.attached?
               image_tag rails_blob_path(product.image, only_path: true), class: 'product-image'
@@ -44,6 +46,7 @@ ActiveAdmin.register Product do
         f.input :description
         f.input :price
         f.input :category
+        f.input :discount_price
         f.input :image, as: :file
       end
       f.actions

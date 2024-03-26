@@ -111,14 +111,14 @@ Category.all.each do |category|
         category_id: category.id
       )
   
-      # 1. Use API to generate image: Failed, to many requests.
-      # search_terms = product.name.downcase.split(/\s+/).join(',')
-      # response = URI.open("https://api.unsplash.com/photos/random?query=#{search_terms}&client_id=El6ZyuhqcDfDXiqyvcYm-VUVWZYGGqz5UvxeOnEfEWY")
-      # data = JSON.parse(response.read)
-      # image_url = data['urls']['regular']
+    #   1. Use API to generate image: Failed, to many requests.
+    #   search_terms = product.name.downcase.split(/\s+/).join(',')
+    #   response = URI.open("https://api.unsplash.com/photos/random?query=#{search_terms}&client_id=El6ZyuhqcDfDXiqyvcYm-VUVWZYGGqz5UvxeOnEfEWY")
+    #   data = JSON.parse(response.read)
+    #   image_url = data['urls']['regular']
       
-      # response = URI.open(image_url)
-      # product.image.attach(io: response, filename: "#{product.name.parameterize(separator: '_')}.jpg")
+    #   response = URI.open(image_url)
+    #   product.image.attach(io: response, filename: "#{product.name.parameterize(separator: '_')}.jpg")
   
       # 2. Use faker to generate: Success, but picture is the same.
       # image_name = product.name.downcase.gsub(' ', '_')
