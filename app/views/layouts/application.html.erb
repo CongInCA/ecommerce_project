@@ -14,7 +14,10 @@
 
   <body>
     <div class="container text-center">
-      <h1 class="mt-5">Welcome to EcoSecondhand store!</h1>
+      <h1 class="mt-5">Welcome to EcoSecondhand store!<% if user_signed_in? %>
+      <%= current_user.email %>
+      <% end %></h1>
+      
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
@@ -27,10 +30,24 @@
             <li class="nav-item">
               <%= link_to 'Contact', contact_path, class: "nav-link" %>
             </li>
+            <% if user_signed_in? %>
+            <li class="nav-item">
+            <%= link_to 'Logout', logout_path, method: :delete, class: "nav-link" %>
+            </li>
+            <% else %>
+              <li class="nav-item">
+                <%= link_to 'Sign up', new_user_registration_path, class: "nav-link" %>
+              </li>
+              <li class="nav-item">
+                <%= link_to 'Login', new_user_session_path, class: "nav-link" %>
+              </li>
+            <% end %>
+            </li>
           </ul>
         </div>
       </nav>
     </div>
     <%= yield %>
+
   </body>
 </html>
