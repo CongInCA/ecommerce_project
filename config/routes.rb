@@ -20,4 +20,11 @@ Rails.application.routes.draw do
   resources :categories, only: [:show]
 
   root "products#index"
+
+  post 'add_to_cart', to: 'carts#add_to_cart'
+  patch 'update_cart', to: 'carts#update_cart'
+  delete 'remove_from_cart', to: 'carts#remove_from_cart'
+
+  resources :carts
+
 end

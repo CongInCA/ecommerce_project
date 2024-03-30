@@ -1,0 +1,14 @@
+<div class="container">
+  <h1>Shopping Cart</h1>
+  <% @cart.each do |product_id, quantity| %>
+    <div class="cart-item">
+      <%= "#{Product.find(product_id).name}: #{quantity}" %>
+      <%= form_tag update_cart_path, method: :patch do %>
+        <%= hidden_field_tag :product_id, product_id %>
+        <%= number_field_tag "quantity", quantity, class: 'quantity-field' %>
+        <%= submit_tag "Update", class: 'btn btn-primary' %>
+      <% end %>
+        <%= button_to "Remove", remove_from_cart_path(product_id: product_id), method: :delete, data: { confirm: "Are you sure?" }, class: 'btn btn-danger' %>
+    </div>
+  <% end %>
+</div>

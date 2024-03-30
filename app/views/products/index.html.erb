@@ -31,6 +31,7 @@
         <th>Description</th>
         <th>Price</th>
         <th>Category</th>
+        <th>Buy it</th>
       </tr>
     </thead>
     <tbody>
@@ -40,6 +41,7 @@
           <td><%= link_to product.description, product_path(product) %></td>
           <td><%= link_to product.discount_price.present? ? product.discount_price : product.price,product_path(product) %></td>
           <td><%= link_to product.category.name, product_path(product) %></td>
+          <td><%= button_to 'Add to Cart', add_to_cart_path(product_id: product.id), method: :post, class: 'btn btn-primary' %></td>
         </tr>
       <% end %>
     </tbody>
