@@ -110,20 +110,28 @@ Category.all.each do |category|
         price: Faker::Commerce.price,
         category_id: category.id
       )
-  
-    #   1. Use API to generate image: Failed, to many requests.
-    #   search_terms = product.name.downcase.split(/\s+/).join(',')
-    #   response = URI.open("https://api.unsplash.com/photos/random?query=#{search_terms}&client_id=El6ZyuhqcDfDXiqyvcYm-VUVWZYGGqz5UvxeOnEfEWY")
-    #   data = JSON.parse(response.read)
-    #   image_url = data['urls']['regular']
-      
-    #   response = URI.open(image_url)
-    #   product.image.attach(io: response, filename: "#{product.name.parameterize(separator: '_')}.jpg")
-  
-      # 2. Use faker to generate: Success, but picture is the same.
-      # image_name = product.name.downcase.gsub(' ', '_')
-      # image_url = Faker::LoremFlickr.image(size: "300x300", search_terms: [image_name])
-      # response = URI.open(image_url)
-      # product.image.attach(io: response, filename: "#{image_name}.jpg")
     end
   end
+
+
+# Create province's rate data
+
+provinces_data = [
+{ name: 'Alberta', gst_rate: 0.05, pst_rate: 0.00, hst_rate: 0.00 },
+{ name: 'British Columbia', gst_rate: 0.05, pst_rate: 0.07, hst_rate: 0.00 },
+{ name: 'Manitoba', gst_rate: 0.05, pst_rate: 0.07, hst_rate: 0.00 },
+{ name: 'New Brunswick', gst_rate: 0.00, pst_rate: 0.00, hst_rate: 0.15 },
+{ name: 'Newfoundland and Labrador', gst_rate: 0.00, pst_rate: 0.00, hst_rate: 0.15 },
+{ name: 'Nova Scotia', gst_rate: 0.00, pst_rate: 0.00, hst_rate: 0.15 },
+{ name: 'Ontario', gst_rate: 0.00, pst_rate: 0.00, hst_rate: 0.13 },
+{ name: 'Prince Edward Island', gst_rate: 0.00, pst_rate: 0.00, hst_rate: 0.15 },
+{ name: 'Quebec', gst_rate: 0.05, pst_rate: 0.09975, hst_rate: 0.00 },
+{ name: 'Saskatchewan', gst_rate: 0.05, pst_rate: 0.06, hst_rate: 0.00 },
+{ name: 'Northwest Territories', gst_rate: 0.05, pst_rate: 0.00, hst_rate: 0.00 },
+{ name: 'Nunavut', gst_rate: 0.05, pst_rate: 0.00, hst_rate: 0.00 },
+{ name: 'Yukon', gst_rate: 0.05, pst_rate: 0.00, hst_rate: 0.00 }
+]
+
+provinces_data.each do |province_data|
+  Province.create!(province_data)
+end
