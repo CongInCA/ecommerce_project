@@ -55,6 +55,7 @@ class CartsController < ApplicationController
   def place_order
     if create_order
       session[:cart] = {}
+      session[:total_price] = 0
       flash[:notice] = "Your order has been placed successfully."
       redirect_to root_path
     else
