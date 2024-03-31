@@ -16,4 +16,8 @@
   <div class="total-price">
     Total: $<%= @total_price %>
   </div>
+
+  <% if @cart.present? %>
+    <%= link_to "Checkout", checkout_carts_path, class: 'btn btn-success' %>
+  <% end %>
 </div>

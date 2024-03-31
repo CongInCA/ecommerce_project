@@ -43,6 +43,11 @@
               </li>
             <% end %>
             </li>
+            <% if user_signed_in? %>
+            <li class="nav-item">
+              <%= link_to 'Carts', carts_path, class: "nav-link" %>
+            </li>
+            <% end %>
           </ul>
         </div>
       </nav>

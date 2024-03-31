@@ -1,12 +1,13 @@
 Rails.application.routes.draw do
   get 'home/index'
-  devise_for :users
+  #devise_for :users
   devise_for :admin_users, ActiveAdmin::Devise.config
   devise_scope :user do
     get 'logout', to: 'devise/sessions#destroy'
   end
+  devise_for :users, controllers: { registrations: 'registrations' }
 
-  ActiveAdmin.routes(self)
+    ActiveAdmin.routes(self)
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -22,9 +23,13 @@ Rails.application.routes.draw do
   root "products#index"
 
   post 'add_to_cart', to: 'carts#add_to_cart'
+  post 'place_order', to: 'carts#place_order'
+
   patch 'update_cart', to: 'carts#update_cart'
   delete 'remove_from_cart', to: 'carts#remove_from_cart'
+  patch 'update_address', to: 'users#update_address'
 
-  resources :carts
-
+  resources :carts do
+    get 'checkout', on: :collection 
+  end
 end

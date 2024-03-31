@@ -1,0 +1,86 @@
+<div class="container">
+  <h1>Checkout</h1>
+  
+  <h2>Shipping Address</h2>
+  <% if current_user.address.present? %>
+    <p><strong>Address:</strong> <%= current_user.address %></p>
+    <p><strong>Province:</strong> <%= current_user.province.name %></p>
+  <% else %>
+    <p>Please provide your shipping address:</p>
+    <%= form_with(model: current_user, url: update_address_path, method: :patch) do |f| %>
+      <div class="form-group">
+        <%= f.label :address, "Address" %>
+        <%= f.text_field :address, class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= f.label :province_id, "Province" %>
+        <%= f.select :province_id, Province.all.map { |p| [p.name, p.id] }, {}, { class: "form-control" } %>
+      </div>
+      <%= f.submit "Save Address", class: "btn btn-primary" %>
+    <% end %>
+  <% end %>
+  
+  <h2>Order Details</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @cart_items.each do |cart_item| %>
+        <% product = cart_item[:product] %>
+        <% quantity = cart_item[:quantity] %>
+        <% subtotal = cart_item[:subtotal] %>
+
+        <tr>
+          <td><%= product.name %></td>
+          <td><%= quantity %></td>
+          <td>$<%= product.price %></td>
+          <td>$<%= subtotal %></td>
+        </tr>
+      <% end %>
+      <tr>
+        <td colspan="3" class="text-right"><strong>Subtotal:</strong></td>
+        <td><strong>$<%= @total_price %></strong></td>
+      </tr>
+        <% if current_user.province.present? %>
+        <% province = Province.find_by(name: current_user.province.name) %>
+        <% total_price = @total_price.to_f %>
+        <% gst = (total_price * province.gst_rate).round(2) %>
+        <% pst = (total_price * province.pst_rate).round(2) %>
+        <% hst = (total_price * province.hst_rate).round(2) %>
+        
+        <% if gst > 0 %>
+            <tr>
+            <td colspan="3" class="text-right"><strong>GST (5%):</strong></td>
+            <td><strong>$<%= gst %></strong></td>
+            </tr>
+        <% end %>
+        
+        <% if pst > 0 %>
+            <tr>
+            <td colspan="3" class="text-right"><strong>PST:</strong></td>
+            <td><strong>$<%= pst %></strong></td>
+            </tr>
+        <% end %>
+        
+        <% if hst > 0 %>
+            <tr>
+            <td colspan="3" class="text-right"><strong>HST:</strong></td>
+            <td><strong>$<%= hst %></strong></td>
+            </tr>
+        <% end %>
+        <% end %>
+      <tr>
+        <td colspan="3" class="text-right"><strong>Total (including tax):</strong></td>
+        <td><strong>$<%= total_price + gst + pst + hst %></strong></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <%= button_to "Place Order", place_order_path, method: :post, class: "btn btn-success" %>
+</div>
