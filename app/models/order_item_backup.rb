@@ -1,0 +1,2 @@
+class OrderItemBackup < ApplicationRecord
+end

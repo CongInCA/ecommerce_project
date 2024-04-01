@@ -76,7 +76,7 @@ class CartsController < ApplicationController
   end
 
   def create_order
-    tax_rate = calculate_tax_rate(current_user.province.name) 
+    tax_rate = calculate_tax_rate(current_user.province.name)
     total_price = session[:total_price].to_f
     total_price_after_tax = calculate_total_price_after_tax(total_price, tax_rate).round(2)
     @order = Order.new(user_id: current_user.id, total_price: session[:total_price], total_price_with_tax: total_price_after_tax)
@@ -87,6 +87,8 @@ class CartsController < ApplicationController
         total_price_with_tax = calculate_total_price_with_tax(product.price, quantity, tax_rate).round(2)
         order_item = @order.order_items.build(product_id: product_id, quantity: quantity, price: product.price * quantity, total_price_with_tax: total_price_with_tax)
         order_item.save
+        
+        OrderItemBackup.create(order_id: @order.id, product_id: product_id, quantity: quantity, price: product.price, tax_rate: tax_rate)
       end
       return true
     else
