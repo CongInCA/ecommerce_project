@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  has_many :orders
+
   belongs_to :province
 
   devise :database_authenticatable, :registerable,

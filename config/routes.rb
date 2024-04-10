@@ -19,6 +19,7 @@ Rails.application.routes.draw do
 
   resources :products, only: [:index, :show]
   resources :categories, only: [:show]
+  resources :orders, only: [:index]
 
   root "products#index"
 
@@ -31,5 +32,9 @@ Rails.application.routes.draw do
 
   resources :carts do
     get 'checkout', on: :collection 
+  end
+
+  namespace :admin do
+    resources :customer_orders, only: [:index]
   end
 end

@@ -1,0 +1,24 @@
+ActiveAdmin.register_page "Customer Orders" do
+  menu parent: "Users", label: "Customer Orders"
+
+  content title: "Customer Orders" do
+    User.all.each do |user|
+      panel user.email do
+        table_for user.orders do
+          column "Order", sortable: :id do |order|
+            link_to "##{order.id}", admin_order_path(order)
+          end
+          column "Products" do |order|
+            order.order_items.map { |item| "#{item.product.name} (#{item.quantity})" }.join(", ").html_safe
+          end
+          column "Taxes" do |order|
+            number_to_currency(order.total_taxes)
+          end
+          column "Grand Total" do |order|
+            number_to_currency(order.total_price_with_tax)
+          end
+        end
+      end
+    end
+  end
+end

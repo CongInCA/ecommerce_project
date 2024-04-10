@@ -83,11 +83,13 @@ class CartsController < ApplicationController
   
     if @order.save
       session[:cart].each do |product_id, quantity|
+        # Save to order_item table.
         product = Product.find(product_id)
         total_price_with_tax = calculate_total_price_with_tax(product.price, quantity, tax_rate).round(2)
         order_item = @order.order_items.build(product_id: product_id, quantity: quantity, price: product.price * quantity, total_price_with_tax: total_price_with_tax)
         order_item.save
         
+        # Save to orderitembackup table.
         OrderItemBackup.create(order_id: @order.id, product_id: product_id, quantity: quantity, price: product.price, tax_rate: tax_rate)
       end
       return true

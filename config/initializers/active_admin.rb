@@ -6,6 +6,12 @@ ActiveAdmin.setup do |config|
   #
   config.site_title = "Ecommerce Project"
 
+  config.namespace :admin do |admin|
+    admin.build_menu :default do |menu|
+      menu.add label: 'Customer Orders', priority: 10, url: -> { admin_customer_orders_path }
+    end
+  end
+
   # Set the link url for the title. For example, to take
   # users to your main site. Defaults to no link.
   #
