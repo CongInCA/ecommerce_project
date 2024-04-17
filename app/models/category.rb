@@ -3,6 +3,12 @@ class Category < ApplicationRecord
 
     include Kaminari::PageScopeMethods
 
+    validates :name, presence: true
+
+    validates :description, presence: true
+
+    validates :name, length: { maximum: 50 }
+    
     def self.ransackable_associations(auth_object = nil)
         ["products"]
       end
