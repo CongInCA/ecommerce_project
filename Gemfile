@@ -4,6 +4,9 @@ ruby "3.3.0"
 
 gem 'kaminari'
 
+gem 'rubocop'
+gem 'rubocop-rails'
+
 gem "activeadmin", "~> 3.2"
 
 gem "devise", "~> 4.9"

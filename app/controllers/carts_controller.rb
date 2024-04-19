@@ -8,9 +8,9 @@ class CartsController < ApplicationController
 
   def add_to_cart
     product_id = params[:product_id]
-    session[:cart] ||= {}  
-    session[:cart][product_id] ||= 0  
-    session[:cart][product_id] += 1  
+    session[:cart] ||= {}
+    session[:cart][product_id] ||= 0
+    session[:cart][product_id] += 1
 
     update_total_price
 
@@ -20,11 +20,11 @@ class CartsController < ApplicationController
   def update_cart
     product_id = params[:product_id]
     quantity = params[:quantity].to_i
-  
+
     session[:cart][product_id] = quantity
-  
+
     update_total_price
-  
+
     flash[:notice] = "Shopping cart updated successfully."
     redirect_to carts_path
   end
@@ -32,9 +32,9 @@ class CartsController < ApplicationController
   def remove_from_cart
     product_id = params[:product_id]
     session[:cart].delete(product_id)
-    
+
     update_total_price
-    
+
     flash[:notice] = "Product removed from cart successfully."
     redirect_to carts_path
   end
@@ -45,11 +45,11 @@ class CartsController < ApplicationController
       redirect_to carts_path
       return
     end
-      
+
     @cart_items = prepare_cart_items
     @total_price = session[:total_price]
-  
-    render 'checkout'
+
+    render "checkout"
   end
 
   def place_order
@@ -70,7 +70,7 @@ class CartsController < ApplicationController
     cart_items = []
     session[:cart].each do |product_id, quantity|
       product = Product.find(product_id)
-      cart_items << { product: product, quantity: quantity, subtotal: product.price * quantity }
+      cart_items << { product:, quantity:, subtotal: product.price * quantity }
     end
     cart_items
   end
@@ -79,44 +79,43 @@ class CartsController < ApplicationController
     tax_rate = calculate_tax_rate(current_user.province.name)
     total_price = session[:total_price].to_f
     total_price_after_tax = calculate_total_price_after_tax(total_price, tax_rate).round(2)
-    @order = Order.new(user_id: current_user.id, total_price: session[:total_price], total_price_with_tax: total_price_after_tax)
-  
-    if @order.save
-      session[:cart].each do |product_id, quantity|
-        # Save to order_item table.
-        product = Product.find(product_id)
-        total_price_with_tax = calculate_total_price_with_tax(product.price, quantity, tax_rate).round(2)
-        order_item = @order.order_items.build(product_id: product_id, quantity: quantity, price: product.price * quantity, total_price_with_tax: total_price_with_tax)
-        order_item.save
-        
-        # Save to orderitembackup table.
-        OrderItemBackup.create(order_id: @order.id, product_id: product_id, quantity: quantity, price: product.price, tax_rate: tax_rate)
-      end
-      return true
-    else
-      return false
+    @order = Order.new(user_id: current_user.id, total_price: session[:total_price],
+                       total_price_with_tax: total_price_after_tax)
+
+    return false unless @order.save
+
+    session[:cart].each do |product_id, quantity|
+      # Save to order_item table.
+      product = Product.find(product_id)
+      total_price_with_tax = calculate_total_price_with_tax(product.price, quantity,
+                                                            tax_rate).round(2)
+      order_item = @order.order_items.build(product_id:, quantity:,
+                                            price: product.price * quantity, total_price_with_tax:)
+      order_item.save
+
+      # Save to orderitembackup table.
+      OrderItemBackup.create(order_id: @order.id, product_id:, quantity:,
+                             price: product.price, tax_rate:)
     end
+    true
   end
-  
-  private
-  
+
   def calculate_tax_rate(province_name)
     province = Province.find_by(name: province_name)
-    return 0 if province.nil? 
+    return 0 if province.nil?
+
     province.gst_rate + province.pst_rate + province.hst_rate
   end
 
   def calculate_total_price_after_tax(price, tax_rate)
     tax_amount = price * tax_rate
-    total_price_after_tax = price + tax_amount
-    return total_price_after_tax
+    price + tax_amount
   end
 
   def calculate_total_price_with_tax(price, quantity, tax_rate)
     subtotal = price * quantity
     tax_amount = subtotal * tax_rate
-    total_price_with_tax = subtotal + tax_amount
-    return total_price_with_tax
+    subtotal + tax_amount
   end
 
   def update_total_price
@@ -126,7 +125,7 @@ class CartsController < ApplicationController
       product = Product.find(product_id)
       total_price += product.price * quantity
     end
-    
+
     session[:total_price] = total_price
   end
 end
